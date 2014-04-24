@@ -41,7 +41,7 @@ Step 3:  Run the main.rb script.  This script will walk you through creating dif
 	 sending them. The transaction types that are created and sent are all based off of the ServiceInformation Operations object
 	 which details what Operations are supported.  The responses for these transactions are outputted to the window.
 
-											
+
 Industry: Ecommerce
 	TxnData_IndustryType = 'Ecommerce'
 	TxnData_CustomerPresent = 'Ecommerce'
@@ -68,7 +68,7 @@ Industry: Retail
 	PINCapability = 'PINNotSupported'
 	ReadCapability = 'HasMSR'
 	EntryMode = 'TrackDataFromMSR'
-											
+
 Industry: Restaurant
 	TxnData_IndustryType = 'Restaurant'
 	TxnData_CustomerPresent = 'Present'
@@ -76,4 +76,4 @@ Industry: Restaurant
 	ApplicationLocation = 'OffPremises'
 	PINCapability = 'PINNotSupported'
 	ReadCapability = 'HasMSR'
-	EntryMode = 'TrackDataFromMSR'											
+	EntryMode = 'TrackDataFromMSR'
