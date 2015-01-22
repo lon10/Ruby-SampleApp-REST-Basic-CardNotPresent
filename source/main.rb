@@ -1,4 +1,3 @@
-
  # Copyright (c) 2013 EVO Payments International - All Rights Reserved.
  #
  # This software and documentation is subject to and made
@@ -23,20 +22,13 @@
  #
  # Sample Code is for reference Only and is intended to be used for educational purposes. It"s the responsibility of
  # the software company to properly integrate into thier solution code that best meets thier production needs.
- #
+
 require_relative 'client_api'
 require_relative 'config'
 require_relative 'Helpers/simple_response'
 require_relative 'Helpers/constants_shared'
 require_relative 'Helpers/recursive_merge'
 require 'json'
-
-#Used to log request to file if stdout is insufficient.
-#def p (string)
-#fp= File.open('.\log.txt','a+')
-#	fp.write(string.to_s+"\n")
-#	fp.close()
-#end
 
 p "Hello! Before you test this sample code, please crack open the code and check out what's going on."
 p "Your solutions consultant has selected a number of tests to run through to ensure this sample works."
@@ -56,81 +48,78 @@ client=EvoCWSClient.new
 #                                                      #
 ########################################################
 
- if (RbConfig::ActivationKey != "" && RbConfig::MerchantType == "Managed")
-  client.service_id = "39C6700001"
+if (RbConfig::ActivationKey != '' && RbConfig::MerchantType == 'Managed')
+  client.service_id = '39C6700001'
   client.merchant_profile_id = RbConfig::ActivationKey
- elsif (RbConfig::ActivationKey != "" && MerchantType == "Unmanaged")
-  client.service_id = "4C85600001"
-  client.merchant_profile_id = RbConfig::ActivationKey+'_TC'
- else
+elsif (RbConfig::ActivationKey != "" && MerchantType == 'Unmanaged')
+  client.service_id = '4C85600001'
+  client.merchant_profile_id = "#{RbConfig::ActivationKey}_TC"
+else
   client.merchant_profile_id = RbConfig::MerchantProfileId
   client.service_id = RbConfig::ServiceID
- end
+end
 
-
-
-#client.merchant_profile_id= RbConfig::MerchantProfileId
 client.application_profile_id=RbConfig::ApplicationProfileId
 client.workflow_id= RbConfig::WorkflowId
-#client.service_id = RbConfig::ServiceID
-
 client.sign_on(RbConfig::IdentityToken)
 
-if (RbConfig::UseWorkflow == false) 
+if !RbConfig::UseWorkflow
   client.workflow_id = RbConfig::ServiceID
 end
 
 module Workflows
 	def self.test_assert(test, result)
 		if (!test)
-			p "FAILED: "+result.last_call
-			exit()
+			p "FAILED: #{result.last_call}"
+			raise Exception.new('Fail!')
 		else
-			p "SUCCESS: "+result.last_call
+			p "SUCCESS: #{result.last_call}"
 		end
 	end
 end
 
-if (client.application_profile_id == "" ) then
-    p "Calling SaveApplicationData"
+if client.application_profile_id == ''
+  p 'Calling SaveApplicationData'
 
-    appProfileId_response = Evo::ApplicationManagement::save_application_data(client)
-    parsed_response = JSON.parse(appProfileId_response.body)
-    client.application_profile_id = parsed_response["id"]
-    p "ApplicationProfileId = " + client.application_profile_id
-    
-    end      
+  appProfileId_response = Evo::ApplicationManagement::save_application_data(client)
+  parsed_response = JSON.parse(appProfileId_response.body)
+  client.application_profile_id = parsed_response['id']
 
-if (client.workflow_id ==  "") then
-  p "Calling GetServiceInformation"
-  service_response = Evo::ServiceInformation::get_service_info(client)
-    if (service_response.data["BankcardServices"].length != 0) then
-
-         service_response.data["BankcardServices"].each { |service|
-  
-             if (service["Operations"].nil?) then next; end
-     
-             client.workflow_id = service["ServiceId"];
-             }
-          end
-        end
-
-if (client.merchant_profile_id == "") then
-    p "Calling SaveMerchantProfiles"
-
-    Evo::MerchantManagement::save_merchant_profile(client, {}, client.service_id)
+  p "ApplicationProfileId = #{client.application_profile_id}"
 end
 
-p "Ready for Host Capture  Script"
+if client.workflow_id ==  ''
+  p 'Calling GetServiceInformation'
+  service_response = Evo::ServiceInformation::get_service_info(client)
+    if service_response.data['BankcardServices'].length != 0
+
+      service_response.data['BankcardServices'].each { |service|
+
+      if service['Operations'].nil?
+        next
+      end
+
+      client.workflow_id = service['ServiceId']
+    }
+    end
+end
+
+if client.merchant_profile_id == ''
+  p 'Calling SaveMerchantProfiles'
+
+  Evo::MerchantManagement::save_merchant_profile(client, {}, client.service_id)
+end
+
+p 'Ready for Host Capture  Script'
 
 Workflows::HostCapture(client)
 
-p "Ready for Terminal Capture Script"
+p 'Ready for Terminal Capture Script'
 
 Workflows::TerminalCapture(client)
 
-p "Ready for TMS Script"
+p 'Ready for TMS Script'
 
 Workflows::TMS(client)
 
-p("Done.")
+p('Done.')
