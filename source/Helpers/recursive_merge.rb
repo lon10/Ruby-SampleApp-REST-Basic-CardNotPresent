@@ -1,5 +1,4 @@
 module Evo
-	
   def Evo.recursive_merge(default, request)
     request.keys.each do |k|
       if default[k].is_a?(Hash) && request[k].is_a?(Hash)

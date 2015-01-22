@@ -28,146 +28,145 @@
 require 'time'
 
 module Evo
-class Tms
-  def self.query_batch(evo_cws_client, request)
-    defaults= {
-  "queryTransactionsParameters"=> {
-    "Amounts" => nil,
-    "ApprovalCodes"=> nil,
-    "BatchIds"=> nil,
-    "CaptureDateRange" => nil,
-    "CaptureStates" => ["ReadyForCapture",
-    "Captured"],
-    "CardTypes"=> nil,
-    "IsAcknowledged" => "false",
-    "MerchantProfileIds"=> nil,
-    "OrderNumbers" => nil,
-    "QueryType" => "AND",
-    "ServiceIds" => nil,
-    "ServiceKeys" => nil,
-    "TransactionClassTypePairs" => nil,
-    "TransactionDateRange" => nil,
-    "TransactionIds" => nil,
-    "TransactionStates" => nil
-  },
-  "includeRelated" => false,
-  "pagingParameters" => {
-    "Page" => "0",
-    "PageSize" => "50"
-  }
-};
+  class Tms
+    def self.query_batch(evo_cws_client, request)
+      defaults= {
+      "queryTransactionsParameters"=> {
+      "Amounts" => nil,
+      "ApprovalCodes"=> nil,
+      "BatchIds"=> nil,
+      "CaptureDateRange" => nil,
+      "CaptureStates" => ["ReadyForCapture", "Captured"],
+      "CardTypes"=> nil,
+      "IsAcknowledged" => "false",
+      "MerchantProfileIds"=> nil,
+      "OrderNumbers" => nil,
+      "QueryType" => "AND",
+      "ServiceIds" => nil,
+      "ServiceKeys" => nil,
+      "TransactionClassTypePairs" => nil,
+      "TransactionDateRange" => nil,
+      "TransactionIds" => nil,
+      "TransactionStates" => nil
+    },
+    "includeRelated" => false,
+    "pagingParameters" => {
+      "Page" => "0",
+      "PageSize" => "50"
+    }
+  };
 
-    defaults["MerchantProfileIds"] = [evo_cws_client.merchant_profile_id];
+      defaults["MerchantProfileIds"] = [evo_cws_client.merchant_profile_id];
 
-    request = Evo.recursive_merge(defaults, request);
+      request = Evo.recursive_merge(defaults, request);
 
-    evo_cws_client.last_call = self.name + "::" + __method__.to_s;
-    evo_cws_client.send( RbConfig::BasePath + '/DataServices/TMS/batch', request, Net::HTTP::Post, RbConfig::BaseURL);
+      evo_cws_client.last_call = self.name + "::" + __method__.to_s;
+      evo_cws_client.send( RbConfig::BasePath + '/DataServices/TMS/batch', request, Net::HTTP::Post, RbConfig::BaseURL);
+    end
+
+     def self.query_transactions_summary(evo_cws_client, request)
+      defaults= {
+    "queryTransactionsParameters"=> {
+      "Amounts" => nil,
+      "ApprovalCodes"=> nil,
+      "BatchIds"=> nil,
+      "CaptureDateRange" => nil,
+      "CaptureStates" => nil, # ["ReadyForCapture","Captured"],
+      "CardTypes"=> nil,
+      "IsAcknowledged" => "false",
+      "MerchantProfileIds"=> nil,
+      "OrderNumbers" => nil,
+      "QueryType" => "AND",
+      "ServiceIds" => nil,
+      "ServiceKeys" => nil,
+      "TransactionClassTypePairs" => nil,
+      "TransactionDateRange" => nil,
+      "TransactionIds" => nil,
+      "TransactionStates" => nil
+    },
+    "includeRelated" => false,
+    "pagingParameters" => {
+      "Page" => "0",
+      "PageSize" => "50"
+    }
+  };
+
+      defaults["MerchantProfileIds"] = [evo_cws_client.merchant_profile_id];
+
+      request = Evo.recursive_merge(defaults, request);
+
+      evo_cws_client.last_call = self.name + "::" + __method__.to_s;
+      evo_cws_client.send( RbConfig::BasePath + '/DataServices/TMS/transactionsSummary', request, Net::HTTP::Post, RbConfig::BaseURL);
+    end
+
+    def self.query_transactions_detail(evo_cws_client, request)
+      defaults= {
+    "queryTransactionsParameters"=> {
+      "Amounts" => nil,
+      "ApprovalCodes"=> nil,
+      "BatchIds"=> nil,
+      "CaptureDateRange" => nil,
+      "CaptureStates" => nil, # ["ReadyForCapture","Captured"],
+      "CardTypes"=> nil,
+      "IsAcknowledged" => "false",
+      "MerchantProfileIds"=> nil,
+      "OrderNumbers" => nil,
+      "QueryType" => "AND",
+      "ServiceIds" => nil,
+      "ServiceKeys" => nil,
+      "TransactionClassTypePairs" => nil,
+      "TransactionDateRange" => nil,
+      "TransactionIds" => nil,
+      "TransactionStates" => nil
+    },
+    "includeRelated" => false,
+    "pagingParameters" => {
+      "Page" => "0",
+      "PageSize" => "50"
+    }
+  };
+
+      defaults["MerchantProfileIds"] = [evo_cws_client.merchant_profile_id];
+
+      request = Evo.recursive_merge(defaults, request);
+
+      evo_cws_client.last_call = self.name + "::" + __method__.to_s;
+      evo_cws_client.send( RbConfig::BasePath + '/DataServices/TMS/transactionsDetail', request, Net::HTTP::Post, RbConfig::BaseURL);
+    end
+    def self.query_transactions_families(evo_cws_client, request)
+      defaults= {
+    "queryTransactionsParameters"=> {
+      "Amounts" => nil,
+      "ApprovalCodes"=> nil,
+      "BatchIds"=> nil,
+      "CaptureDateRange" => nil,
+      "CaptureStates" => nil, # ["ReadyForCapture","Captured"],
+      "CardTypes"=> nil,
+      "IsAcknowledged" => "false",
+      "MerchantProfileIds"=> nil,
+      "OrderNumbers" => nil,
+      "QueryType" => "AND",
+      "ServiceIds" => nil,
+      "ServiceKeys" => nil,
+      "TransactionClassTypePairs" => nil,
+      "TransactionDateRange" => nil,
+      "TransactionIds" => nil,
+      "TransactionStates" => nil
+    },
+    "includeRelated" => true,
+    "pagingParameters" => {
+      "Page" => "0",
+      "PageSize" => "50"
+    }
+  };
+
+      defaults["MerchantProfileIds"] = [evo_cws_client.merchant_profile_id];
+
+      request = Evo.recursive_merge(defaults, request);
+
+      evo_cws_client.last_call = self.name + "::" + __method__.to_s;
+      evo_cws_client.send( RbConfig::BasePath + '/DataServices/TMS/transactionsFamily', request, Net::HTTP::Post, RbConfig::BaseURL);
+    end
   end
-  
-   def self.query_transactions_summary(evo_cws_client, request)
-    defaults= {
-  "queryTransactionsParameters"=> {
-    "Amounts" => nil,
-    "ApprovalCodes"=> nil,
-    "BatchIds"=> nil,
-    "CaptureDateRange" => nil,
-    "CaptureStates" => nil, # ["ReadyForCapture","Captured"],
-    "CardTypes"=> nil,
-    "IsAcknowledged" => "false",
-    "MerchantProfileIds"=> nil,
-    "OrderNumbers" => nil,
-    "QueryType" => "AND",
-    "ServiceIds" => nil,
-    "ServiceKeys" => nil,
-    "TransactionClassTypePairs" => nil,
-    "TransactionDateRange" => nil,
-    "TransactionIds" => nil,
-    "TransactionStates" => nil
-  },
-  "includeRelated" => false,
-  "pagingParameters" => {
-    "Page" => "0",
-    "PageSize" => "50"
-  }
-};
-
-    defaults["MerchantProfileIds"] = [evo_cws_client.merchant_profile_id];
-
-    request = Evo.recursive_merge(defaults, request);
-
-    evo_cws_client.last_call = self.name + "::" + __method__.to_s;
-    evo_cws_client.send( RbConfig::BasePath + '/DataServices/TMS/transactionsSummary', request, Net::HTTP::Post, RbConfig::BaseURL);
-  end
-  
-  def self.query_transactions_detail(evo_cws_client, request)
-    defaults= {
-  "queryTransactionsParameters"=> {
-    "Amounts" => nil,
-    "ApprovalCodes"=> nil,
-    "BatchIds"=> nil,
-    "CaptureDateRange" => nil,
-    "CaptureStates" => nil, # ["ReadyForCapture","Captured"],
-    "CardTypes"=> nil,
-    "IsAcknowledged" => "false",
-    "MerchantProfileIds"=> nil,
-    "OrderNumbers" => nil,
-    "QueryType" => "AND",
-    "ServiceIds" => nil,
-    "ServiceKeys" => nil,
-    "TransactionClassTypePairs" => nil,
-    "TransactionDateRange" => nil,
-    "TransactionIds" => nil,
-    "TransactionStates" => nil
-  },
-  "includeRelated" => false,
-  "pagingParameters" => {
-    "Page" => "0",
-    "PageSize" => "50"
-  }
-};
-
-    defaults["MerchantProfileIds"] = [evo_cws_client.merchant_profile_id];
-
-    request = Evo.recursive_merge(defaults, request);
-
-    evo_cws_client.last_call = self.name + "::" + __method__.to_s;
-    evo_cws_client.send( RbConfig::BasePath + '/DataServices/TMS/transactionsDetail', request, Net::HTTP::Post, RbConfig::BaseURL);
-  end
-  def self.query_transactions_families(evo_cws_client, request)
-    defaults= {
-  "queryTransactionsParameters"=> {
-    "Amounts" => nil,
-    "ApprovalCodes"=> nil,
-    "BatchIds"=> nil,
-    "CaptureDateRange" => nil,
-    "CaptureStates" => nil, # ["ReadyForCapture","Captured"],
-    "CardTypes"=> nil,
-    "IsAcknowledged" => "false",
-    "MerchantProfileIds"=> nil,
-    "OrderNumbers" => nil,
-    "QueryType" => "AND",
-    "ServiceIds" => nil,
-    "ServiceKeys" => nil,
-    "TransactionClassTypePairs" => nil,
-    "TransactionDateRange" => nil,
-    "TransactionIds" => nil,
-    "TransactionStates" => nil
-  },
-  "includeRelated" => true,
-  "pagingParameters" => {
-    "Page" => "0",
-    "PageSize" => "50"
-  }
-};
-
-    defaults["MerchantProfileIds"] = [evo_cws_client.merchant_profile_id];
-
-    request = Evo.recursive_merge(defaults, request);
-
-    evo_cws_client.last_call = self.name + "::" + __method__.to_s;
-    evo_cws_client.send( RbConfig::BasePath + '/DataServices/TMS/transactionsFamily', request, Net::HTTP::Post, RbConfig::BaseURL);
-  end
-  end
-  end
+end
   

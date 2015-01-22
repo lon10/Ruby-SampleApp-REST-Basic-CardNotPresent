@@ -28,9 +28,9 @@ require 'time'
 require 'base64'
 require 'json'
 
-require_relative 'ApplicationAndMerchantSetup/2_ApplicationDataManagement'
-require_relative 'ApplicationAndMerchantSetup/3_GetServiceInformation'
-require_relative 'ApplicationAndMerchantSetup/4_MerchantProfileManagement'
+require_relative 'ApplicationAndMerchantSetup/application_management'
+require_relative 'ApplicationAndMerchantSetup/service_information'
+require_relative 'ApplicationAndMerchantSetup/merchant_management'
 require_relative 'TransactionProcessing/endpoint_txn'
 require_relative 'TransactionProcessing/TerminalCaptureWorkflow'
 require_relative 'TransactionProcessing/HostCaptureWorkflow'
@@ -42,22 +42,18 @@ module Evo
 	class Client
 		#Your Solutions Consultant may have commented out some of the lines below to match your implementation.
 
-		
-		
 		def initialize()
-			@do_log=false
-			@do_proxy=false
+			@do_log = false
+			@do_proxy = false
+			@session_token = ''
+			@merchant_profile_id = ''
+			@application_profile_id = ''
+			@workflow_id = ''
+			@service_id = ''
+			@full_path = ''
+			@base_URL = ''
 			
-			@session_token=""
-			
-			@merchant_profile_id=""
-			@application_profile_id=""
-			@workflow_id = ""
-			@service_id = ""
-			@full_path = ""
-			@base_URL = ""
-			
-			@last_call=""
+			@last_call = ''
 			#Used to debug the last called url.
 		end
 		
@@ -67,43 +63,39 @@ module Evo
 		attr_accessor :last_call
 		
 		def send(path, body, rest_action, url)
-		    @do_log=true
-			#path = "/rest/2.0.18" + path
-			#@do_proxy=true;
-			if (@do_proxy)
-				url='localhost'
+			@do_log = true
+			if @do_proxy
+				url = 'localhost'
 				https = Net::HTTP.new(url, 80)
 			else
 				https = Net::HTTP.new(url, 443)
-				https.use_ssl= true
+				https.use_ssl = true
 			end
-			@last_call = @last_call + " to URL: "+ rest_action.to_s[11..-1] +" "+ path
+			@last_call = "#{@last_call} to URL: #{rest_action.to_s[11..-1]} #{path}"
 			
 			https.verify_mode = OpenSSL::SSL::VERIFY_NONE
-				#Please verify the connection when you go to production!
+			#Please verify the connection when you go to production!
 			request = rest_action.new(path)
 			
-			if @session_token == ""
-				p "Session token is blank!"
-				return {'data'=>{'success'=>false}}
+			if @session_token == ''
+				p 'Session token is blank!'
+				return { data: { success: false } }
 			end
+
 			request.basic_auth(@session_token,nil)
-			request.set_content_type("application/json")			
-			#request.delete "accept"
-			request.add_field("accept","application/json")
-			request.add_field("Expect","100-continue")
-			request.add_field("Host", url)
+			request.set_content_type('application/json')
+			request.add_field('accept', 'application/json')
+			request.add_field('Expect', '100-continue')
+			request.add_field('Host', url)
 			
-			if (!body.nil?)
+			if body
 				body = JSON.generate(body)
-				if (@do_log)
+				if @do_log
 					p body
 				end
 			end
-			response=https.start { |https|
-				https.request(request, body)
-			}
-			if (@do_log)
+			response = https.start { |https| https.request(request, body) }
+			if @do_log
 				p response.code
 				p response.body
 			end
@@ -117,22 +109,19 @@ module Evo
 		# All of the endpoints outside of SvcInfo expect a valid session_token.
 	
 		def sign_on(identity_token)
-			@session_token= identity_token
+			@session_token = identity_token
 			
-			p "Requesting signOn..."+@session_token[0..32]
-			response= send(RbConfig::BasePath + "/svcinfo/token", nil, Net::HTTP::Get, RbConfig::BaseURL)
+			p "Requesting signOn... #{@session_token[0..32]}"
+			response = send("#{RbConfig::BasePath}/svcinfo/token", nil, Net::HTTP::Get, RbConfig::BaseURL)
+			p 'Done'
 			
-			
-			
-			p "Done"
-			
-			if (response.code != "200" || response.body.length < 100)
-				p "Oops, it seems we didn't get a session token. Response code="+ response.code;
+			if (response.code != '200' || response.body.length < 100)
+				p "Oops, it seems we didn't get a session token. Response code = #{response.code}"
 				p response.body
 				@session_token = nil
 				return
 			end
-			@session_token=response.body[1,response.body.length-2] #remove quotes
+			@session_token = response.body[1,response.body.length-2] #remove quotes
 			
 			# Protip: The saml assertion can be read and verified of its duration.
 			# It would be prudent to make a type of check_session() function to be called before any calls

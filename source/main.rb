@@ -36,7 +36,7 @@ p "If you have questions, please contact us at support@evosnap.com"
 
 # Publisher
 
-client=EvoCWSClient.new
+client = EvoCWSClient.new
 
 ########################################################
 #                                                      #
