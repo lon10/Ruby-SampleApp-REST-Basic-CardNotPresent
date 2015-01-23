@@ -51,7 +51,7 @@ client = EvoCWSClient.new
 if (RbConfig::ActivationKey != '' && RbConfig::MerchantType == 'Managed')
   client.service_id = '39C6700001'
   client.merchant_profile_id = RbConfig::ActivationKey
-elsif (RbConfig::ActivationKey != "" && MerchantType == 'Unmanaged')
+elsif (RbConfig::ActivationKey != '' && MerchantType == 'Unmanaged')
   client.service_id = '4C85600001'
   client.merchant_profile_id = "#{RbConfig::ActivationKey}_TC"
 else
@@ -59,8 +59,8 @@ else
   client.service_id = RbConfig::ServiceID
 end
 
-client.application_profile_id=RbConfig::ApplicationProfileId
-client.workflow_id= RbConfig::WorkflowId
+client.application_profile_id = RbConfig::ApplicationProfileId
+client.workflow_id = RbConfig::WorkflowId
 client.sign_on(RbConfig::IdentityToken)
 
 if !RbConfig::UseWorkflow
@@ -71,7 +71,7 @@ module Workflows
 	def self.test_assert(test, result)
 		if (!test)
 			p "FAILED: #{result.last_call}"
-			raise Exception.new('Fail!')
+			# raise Exception.new('Fail!')
 		else
 			p "SUCCESS: #{result.last_call}"
 		end
@@ -90,7 +90,7 @@ end
 
 if client.workflow_id ==  ''
   p 'Calling GetServiceInformation'
-  service_response = Evo::ServiceInformation::get_service_info(client)
+  service_response = Evo::ServiceManagement::get_service_info(client)
     if service_response.data['BankcardServices'].length != 0
 
       service_response.data['BankcardServices'].each { |service|
@@ -105,21 +105,21 @@ if client.workflow_id ==  ''
 end
 
 if client.merchant_profile_id == ''
-  p 'Calling SaveMerchantProfiles'
+  p "Calling SaveMerchantProfiles"
 
-  Evo::MerchantManagement::save_merchant_profile(client, {}, client.service_id)
+    Evo::MerchantManagement::save_merchant_profile(client, {}, client.service_id)
 end
 
-p 'Ready for Host Capture  Script'
-
+# p "Ready for Host Capture  Script"
+#
 Workflows::HostCapture(client)
 
-p 'Ready for Terminal Capture Script'
-
-Workflows::TerminalCapture(client)
-
-p 'Ready for TMS Script'
-
-Workflows::TMS(client)
-
-p('Done.')
+# p "Ready for Terminal Capture Script"
+#
+# Workflows::TerminalCapture(client)
+#
+# p "Ready for TMS Script"
+#
+# Workflows::TMS(client)
+#
+# p("Done.")

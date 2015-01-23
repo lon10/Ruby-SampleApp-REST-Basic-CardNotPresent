@@ -37,11 +37,9 @@ module Evo
       
       if workflow_id == ''
         workflow_id = evo_cws_client.workflow_id
-      end
-      if workflow_id != ''
-        params = "serviceId=#{URI::encode(workflow_id)}"
-      else
         params = ''
+      else
+        params = "serviceId=#{URI::encode(workflow_id)}"
       end
 
       if merchant_profile_id == ''

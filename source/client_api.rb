@@ -28,9 +28,9 @@ require 'time'
 require 'base64'
 require 'json'
 
-require_relative 'ApplicationAndMerchantSetup/application_management'
-require_relative 'ApplicationAndMerchantSetup/service_information'
-require_relative 'ApplicationAndMerchantSetup/merchant_management'
+require_relative 'managements/application_management'
+require_relative 'managements/merchant_management'
+require_relative 'managements/service_management'
 require_relative 'TransactionProcessing/endpoint_txn'
 require_relative 'TransactionProcessing/TerminalCaptureWorkflow'
 require_relative 'TransactionProcessing/HostCaptureWorkflow'
@@ -63,7 +63,7 @@ module Evo
 		attr_accessor :last_call
 		
 		def send(path, body, rest_action, url)
-			@do_log = true
+			# @do_log = true
 			if @do_proxy
 				url = 'localhost'
 				https = Net::HTTP.new(url, 80)
@@ -94,6 +94,7 @@ module Evo
 					p body
 				end
 			end
+
 			response = https.start { |https| https.request(request, body) }
 			if @do_log
 				p response.code
@@ -128,21 +129,13 @@ module Evo
 			# to check the @session_expires is not < time.now()   -- and if so, call sign on.
 			# Or, for a constant connection do a 25 minute cron job that gets the latest session token
 			# to *securely* share among all your servers.
-			
-			#match_expires=/(?<=NotOnOrAfter=\")[\s\S]*?(?=\")/
-			#match= match_expires.match(Base64.decode64(@session_token))
-			#if match
-			#	@session_expires=match[0]
-			#	p "Security Token Expires on: #{match[0]}"
-			#end
-			#@session_token
 		end
 	end
 end
 
 
 EvoCWSClient = Evo::Client
-EvoCWS_endpoint_svcinfo = Evo::ServiceInformation
+EvoCWS_endpoint_svcinfo = Evo::ServiceManagement
 EvoCWS_endpoint_merchinfo = Evo::MerchantManagement
 EvoCWS_endpoint_appdata = Evo::ApplicationManagement
 EvoCWS_endpoint_txn = Evo::Txn
