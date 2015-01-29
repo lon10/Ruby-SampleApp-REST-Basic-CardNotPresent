@@ -25,9 +25,9 @@
 
 require_relative 'client_api'
 require_relative 'config'
-require_relative 'Helpers/simple_response'
-require_relative 'Helpers/constants_shared'
-require_relative 'Helpers/recursive_merge'
+require_relative 'helpers/simple_response'
+require_relative 'helpers/constants_shared'
+require_relative 'helpers/recursive_merge'
 require 'json'
 
 p "Hello! Before you test this sample code, please crack open the code and check out what's going on."
@@ -110,16 +110,16 @@ if client.merchant_profile_id == ''
     Evo::MerchantManagement::save_merchant_profile(client, {}, client.service_id)
 end
 
-# p "Ready for Host Capture  Script"
-#
+p "Ready for Host Capture  Script"
+
 Workflows::HostCapture(client)
 
-# p "Ready for Terminal Capture Script"
-#
-# Workflows::TerminalCapture(client)
-#
-# p "Ready for TMS Script"
-#
-# Workflows::TMS(client)
-#
-# p("Done.")
+p "Ready for Terminal Capture Script"
+
+Workflows::TerminalCapture(client)
+
+p "Ready for TMS Script"
+
+Workflows::TMS(client)
+
+p("Done.")
