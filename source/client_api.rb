@@ -31,11 +31,11 @@ require 'json'
 require_relative 'managements/application_management'
 require_relative 'managements/merchant_management'
 require_relative 'managements/service_management'
-require_relative 'TransactionProcessing/endpoint_txn'
-require_relative 'TransactionProcessing/TerminalCaptureWorkflow'
-require_relative 'TransactionProcessing/HostCaptureWorkflow'
-require_relative 'TransactionManagementServices/endpoint_txn_management_services'
-require_relative 'TransactionManagementServices/TMSWorkflow'
+require_relative 'transaction_processing/endpoint_txn'
+require_relative 'transaction_processing/terminal_capture_workflow'
+require_relative 'transaction_processing/host_capture_workflow'
+require_relative 'transaction_management_services/endpoint_txn_management_services'
+require_relative 'transaction_management_services/tms_workflow'
 
 module Evo
 
